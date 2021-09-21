@@ -1,24 +1,28 @@
-// express boilerplate typescript
+// // express boilerplate typescript
 
-import express from 'express';
-import  bodyParser from 'body-parser';
+// import express from 'express';
+// import  bodyParser from 'body-parser';
+import "reflect-metadata";
+import { MikroORM } from "mikro-orm";
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import { buildSchema } from "type-graphql";
+import mikroOrmConfig from "./mikro-orm.config";
+import UserResolver from "./src/resolver/user";
 
+const intializeServer = async () => {
+  const orm = await MikroORM.init(mikroOrmConfig);
+  await orm.getMigrator().up();
+  const app = express();
 
-// create the express app
-const app: express.Application = express();
+  const schema = await buildSchema({
+    resolvers: [UserResolver],
+    validate: false,
+  });
+  const apollo = new ApolloServer({ schema });
+  await apollo.start();
+  apollo.applyMiddleware({ app });
+  app.listen(4000, () => console.log("server started at 4000"));
+};
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// parse application/json
-app.use(bodyParser.json());
-
-// define a route handler for the default home page
-app.get('/', (req: express.Request, res: express.Response) => {
-  res.send('Hello world!');
-});
-
-// start the Express server
-app.listen(3000, () => {
-  console.log('server started at http://localhost:3000');
-});
+intializeServer();

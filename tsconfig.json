@@ -17,5 +17,5 @@
     "jsx": "react",
     "types": ["jest", "node"]
   },
-  "include": ["www/client", "www/server"]
+  "include": ["www/client", "www/client"]
 }

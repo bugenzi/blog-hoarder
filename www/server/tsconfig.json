@@ -16,7 +16,8 @@
     "moduleResolution": "node",
     "types": ["node"],
     "incremental": true,
-    "composite": true
+    "composite": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["**/*.ts"],
   "exclude": ["**/*.test.ts"]
