@@ -9,18 +9,23 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import mikroOrmConfig from "./mikro-orm.config";
 import UserResolver from "./src/resolver/user";
+import { MyContext } from "./types";
+import TestResolver from "./src/resolver/test";
 
 const intializeServer = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
   await orm.getMigrator().up();
   const app = express();
 
-  const schema = await buildSchema({
-    resolvers: [UserResolver],
-    validate: false,
+  const apollo = new ApolloServer({
+    schema: await buildSchema({
+      resolvers: [UserResolver, TestResolver],
+      validate: false,
+    }),
+    context: ({ req, res }): MyContext => ({ req, res, em: orm.em }),
   });
-  const apollo = new ApolloServer({ schema });
   await apollo.start();
+  // super cool method that integrates cors body parser and playground for you
   apollo.applyMiddleware({ app });
   app.listen(4000, () => console.log("server started at 4000"));
 };

@@ -1,20 +1,20 @@
-import { Entity, Property, PrimaryKey } from "mikro-orm";
+import { Entity, Property, PrimaryKey } from "@mikro-orm/core";
 import { ObjectType, Field } from "type-graphql";
 
-ObjectType();
-@Entity({ tableName: "Users" })
+@ObjectType()
+@Entity({ tableName: "user" })
 export default class User {
   @Field()
   @PrimaryKey()
   id!: number;
 
-  // @Field()
-  // @Property({ type: "date" })
-  // createdAt: Date = new Date();
+  @Field(() => String)
+  @Property({ type: "date" })
+  createdAt: Date = new Date();
 
-  // @Field()
-  // @Property({ type: "date", onUpdate: () => new Date() })
-  // updatedAt: Date = new Date();
+  @Field()
+  @Property({ type: "date", onUpdate: () => new Date() })
+  updatedAt: Date = new Date();
 
   @Field()
   @Property({ type: "text", unique: true })

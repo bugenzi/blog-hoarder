@@ -5,6 +5,6 @@ export default class UserCredInput {
   @Field()
   username: string;
 
-  @Field()
+  @Field(() => String)
   password: string;
 }
