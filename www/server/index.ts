@@ -2,15 +2,15 @@
 
 // import express from 'express';
 // import  bodyParser from 'body-parser';
-import "reflect-metadata";
-import { MikroORM } from "mikro-orm";
-import express from "express";
-import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import mikroOrmConfig from "./mikro-orm.config";
-import UserResolver from "./src/resolver/user";
-import { MyContext } from "./types";
-import TestResolver from "./src/resolver/test";
+import 'reflect-metadata';
+import { MikroORM } from 'mikro-orm';
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import { buildSchema } from 'type-graphql';
+import mikroOrmConfig from './mikro-orm.config';
+import UserResolver from './src/resolver/user';
+import { MyContext } from './types';
+import TestResolver from './src/resolver/test';
 
 const intializeServer = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
@@ -27,7 +27,7 @@ const intializeServer = async () => {
   await apollo.start();
   // super cool method that integrates cors body parser and playground for you
   apollo.applyMiddleware({ app });
-  app.listen(4000, () => console.log("server started at 4000"));
+  app.listen(4000, () => console.log('server started at 4000'));
 };
 
 intializeServer();

@@ -1,9 +1,15 @@
 {
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
+  "prettier.singleQuote": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.fixAll.eslint.format": true
+  },
+  "vetur.format.defaultFormatterOptions": {
+    "prettier": {
+      "singleQuote": true
+    }
   }
 }

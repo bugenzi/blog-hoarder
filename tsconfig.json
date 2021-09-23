@@ -1,21 +1,13 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "strict": true,
+    // keep this
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-
-    "noEmit": true,
-    "jsx": "react",
-    "types": ["jest", "node"]
+    "target": "ES2021",
+    "esModuleInterop": true,
+    "jsx": "react"
   },
-  "include": ["www/client", "www/client"]
+  "include": ["www/client"]
 }

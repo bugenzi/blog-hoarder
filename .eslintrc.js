@@ -9,12 +9,20 @@ module.exports = {
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
+      ecmaVersion: 2021,
     },
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ["react", "@typescript-eslint", "jest", "prettier"],
   rules: {
+    "prettier/prettier": [
+      "warn",
+      {
+        singleQuote: true,
+        semi: true,
+      },
+    ],
     "react/jsx-filename-extension": [
       2,
       { extensions: [".js", ".jsx", ".ts", ".tsx"] },
