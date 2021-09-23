@@ -35,7 +35,7 @@ const intializeServer = async () => {
         secure: __prod__,
       },
       saveUninitialized: false,
-      secret: 'keyboard cat',
+      secret: 'salamasalamagolemasalama',
       resave: false,
     })
   );
