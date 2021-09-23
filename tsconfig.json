@@ -7,7 +7,24 @@
     "forceConsistentCasingInFileNames": true,
     "target": "ES2021",
     "esModuleInterop": true,
-    "jsx": "react"
+    "jsx": "preserve",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "include": ["www/client"]
+  "include": [
+    "www/client"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
