@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-
 import { Resolver, Ctx, Mutation, Arg, Query } from 'type-graphql';
 import argon2 from 'argon2';
 import { MyContext } from '../../types';
@@ -41,14 +40,13 @@ export default class UserResolver {
         };
       }
     }
-
     return { user };
   }
 
   @Mutation(() => UserResponse)
   async login(
     @Arg('options') options: UserCredInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     if (options.password.length <= 2) {
       return {
@@ -77,7 +75,7 @@ export default class UserResolver {
         ],
       };
     }
-
+    req.session.userId = user.id;
     return { user };
   }
 

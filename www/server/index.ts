@@ -1,22 +1,44 @@
-// // express boilerplate typescript
-
-// import express from 'express';
-// import  bodyParser from 'body-parser';
 import 'reflect-metadata';
 import { MikroORM } from 'mikro-orm';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
+import redis from 'redis';
+import session from 'express-session';
+import connectRedis from 'connect-redis';
 import mikroOrmConfig from './mikro-orm.config';
 import UserResolver from './src/resolver/user';
 import { MyContext } from './types';
 import TestResolver from './src/resolver/test';
+import { __prod__ } from './constants';
 
 const intializeServer = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
   await orm.getMigrator().up();
+
   const app = express();
 
+  const RedisStore = connectRedis(session);
+  const redisClient = redis.createClient();
+
+  app.use(
+    session({
+      name: 'qid',
+      store: new RedisStore({
+        client: redisClient,
+        disableTouch: false,
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: __prod__,
+      },
+      saveUninitialized: false,
+      secret: 'keyboard cat',
+      resave: false,
+    })
+  );
   const apollo = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver, TestResolver],

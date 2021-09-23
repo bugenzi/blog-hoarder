@@ -1,5 +1,6 @@
-import { Connection, EntityManager, IDatabaseDriver } from "@mikro-orm/core";
-import { Request, Response } from "express";
+/* eslint-disable no-unused-vars */
+import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core';
+import { Request, Response } from 'express';
 
 export type MyContext = {
   em: EntityManager<IDatabaseDriver<Connection>>;
@@ -7,10 +8,10 @@ export type MyContext = {
   res: Response;
 };
 
-// ----- Helps with the fixing anyoing bug with req
+// ----- Helps with the fixing anyoing bug with req and sessions
 
-// declare module "express-session" {
-//   interface Session {
-//     userId: number;
-//   }
-// }
+declare module 'express-session' {
+  interface Session {
+    userId: number;
+  }
+}
