@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 
-import { Resolver, Ctx, Mutation, Arg } from 'type-graphql';
+import { Resolver, Ctx, Mutation, Arg, Query } from 'type-graphql';
+import argon2 from 'argon2';
 import { MyContext } from '../../types';
 import User from '../entities/User';
 import UserCredInput from '../utils/UserCredInput';
@@ -13,22 +14,83 @@ export default class UserResolver {
     @Arg('options') options: UserCredInput,
     @Ctx() { em }: MyContext
   ): Promise<UserResponse> {
+    if (options.password.length <= 2) {
+      return {
+        errors: [{ field: 'Passowrd', message: 'Password is to short' }],
+      };
+    }
+    if (options.username.length <= 2) {
+      return {
+        errors: [{ field: 'Username', message: 'Username is to short' }],
+      };
+    }
+    const hashedPassowrd = argon2.hash(options.password);
     const user = await em.create(User, {
       username: options.username,
-      password: options.password,
+      password: hashedPassowrd,
     });
-    // if (!user) {d
-    //   return { errors: [{ field: "error ", message: "something went wrong" }] };
-    // }
 
     try {
       await em.persistAndFlush(user);
     } catch (error) {
       if (error.code === '23505') {
-        console.log('erro');
+        return {
+          errors: [
+            { field: 'Registration error', message: 'Name is already taken' },
+          ],
+        };
       }
     }
 
     return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg('options') options: UserCredInput,
+    @Ctx() { em }: MyContext
+  ): Promise<UserResponse> {
+    if (options.password.length <= 2) {
+      return {
+        errors: [{ field: 'Passowrd', message: 'Password is to short' }],
+      };
+    }
+    if (options.username.length <= 2) {
+      return {
+        errors: [{ field: 'Username', message: 'Username is to short' }],
+      };
+    }
+
+    const user = await em.findOne(User, {
+      username: options.username,
+    });
+
+    const isValid = argon2.verify(options.password, user.password);
+
+    if (!isValid) {
+      return {
+        errors: [
+          {
+            field: 'Passowrd',
+            message: 'Wrong credentials',
+          },
+        ],
+      };
+    }
+
+    return { user };
+  }
+
+  @Query(() => UserResponse)
+  async getUsers(@Ctx() { em }: MyContext): Promise<UserResponse> {
+    const users = await em.find(User, {});
+    if (!users) {
+      return {
+        errors: [
+          { field: 'Users', message: 'Cannot get users something went wrong' },
+        ],
+      };
+    }
+    return { users };
   }
 }

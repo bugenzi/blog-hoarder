@@ -9,4 +9,7 @@ export default class UserResponse {
 
   @Field(() => User, { nullable: true })
   user?: User;
+
+  @Field(() => [User], { nullable: true })
+  users?: User[];
 }
