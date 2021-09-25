@@ -7,7 +7,7 @@ interface IWrapperProps {
 }
 function Wrapper({ children }: IWrapperProps) {
   return (
-    <Container color="red" maxWidth="sm">
+    <Container maxWidth="lg" sx={{ display: 'flex' }}>
       {children}
     </Container>
   )

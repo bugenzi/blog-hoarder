@@ -18,13 +18,13 @@ const intializeServer = async () => {
   await orm.getMigrator().up()
 
   const app = express()
-  const corsOptions = {
-    origin: '*',
-    credentials: true, // <-- REQUIRED backend setting
-  }
+  // const corsOptions = {
+  //   origin: 'http://localhost:3000' || '*',
+  //   credentials: true, // <-- REQUIRED backend setting
+  // }
   const RedisStore = connectRedis(session)
   const redisClient = redis.createClient()
-  app.use(cors(corsOptions))
+  app.use(cors({ credentials: true }))
   app.use(
     session({
       name: 'qid',
@@ -52,7 +52,7 @@ const intializeServer = async () => {
   })
   await apollo.start()
   // super cool method that integrates cors body parser and playground for you
-  apollo.applyMiddleware({ app, cors: false })
+  apollo.applyMiddleware({ app })
   app.listen(4000, () => console.log('server started at 4000'))
 }
 
