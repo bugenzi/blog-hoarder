@@ -1,26 +1,30 @@
-import 'reflect-metadata';
-import { MikroORM } from 'mikro-orm';
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
-import { buildSchema } from 'type-graphql';
-import redis from 'redis';
-import session from 'express-session';
-import connectRedis from 'connect-redis';
-import mikroOrmConfig from './mikro-orm.config';
-import UserResolver from './src/resolver/user';
-import { MyContext } from './types';
-import TestResolver from './src/resolver/test';
-import { __prod__ } from './constants';
+import 'reflect-metadata'
+import { MikroORM } from 'mikro-orm'
+import express from 'express'
+import { ApolloServer } from 'apollo-server-express'
+import { buildSchema } from 'type-graphql'
+import redis from 'redis'
+import session from 'express-session'
+import connectRedis from 'connect-redis'
+import cors from 'cors'
+import mikroOrmConfig from './mikro-orm.config'
+import UserResolver from './src/resolver/user'
+import { MyContext } from './types'
+import TestResolver from './src/resolver/test'
+import { __prod__ } from './constants'
 
 const intializeServer = async () => {
-  const orm = await MikroORM.init(mikroOrmConfig);
-  await orm.getMigrator().up();
+  const orm = await MikroORM.init(mikroOrmConfig)
+  await orm.getMigrator().up()
 
-  const app = express();
-
-  const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
-
+  const app = express()
+  const corsOptions = {
+    origin: '*',
+    credentials: true, // <-- REQUIRED backend setting
+  }
+  const RedisStore = connectRedis(session)
+  const redisClient = redis.createClient()
+  app.use(cors(corsOptions))
   app.use(
     session({
       name: 'qid',
@@ -38,18 +42,18 @@ const intializeServer = async () => {
       secret: 'salamasalamagolemasalama',
       resave: false,
     })
-  );
+  )
   const apollo = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver, TestResolver],
       validate: false,
     }),
     context: ({ req, res }): MyContext => ({ req, res, em: orm.em }),
-  });
-  await apollo.start();
+  })
+  await apollo.start()
   // super cool method that integrates cors body parser and playground for you
-  apollo.applyMiddleware({ app });
-  app.listen(4000, () => console.log('server started at 4000'));
-};
+  apollo.applyMiddleware({ app, cors: false })
+  app.listen(4000, () => console.log('server started at 4000'))
+}
 
-intializeServer();
+intializeServer()

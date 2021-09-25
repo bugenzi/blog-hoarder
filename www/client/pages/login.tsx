@@ -18,7 +18,7 @@ mutation Mutation($username: String!,$password:String!) {
   }
 }
 `
-function Register() {
+function Login() {
   const [, register] = useMutation(REGISTER_MUTATION)
   return (
     <Wrapper>
@@ -66,4 +66,4 @@ function Register() {
   )
 }
 
-export default Register
+export default Login

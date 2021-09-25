@@ -2,7 +2,7 @@
 import React, { InputHTMLAttributes } from 'react'
 import { TextField } from '@mui/material'
 import { useField, FormikErrors } from 'formik'
-// interface Props{}
+
 type InputFieldType = InputHTMLAttributes<HTMLInputElement> & {
   label: String
   name: String
@@ -16,10 +16,10 @@ const InputField: React.FC<InputFieldType> = ({
   ...props
 }) => {
   const [field, { error }] = useField(props)
-
   return (
-    <div>
+    <>
       <TextField
+        margin="normal"
         {...field}
         fullWidth
         id={field.name}
@@ -28,7 +28,7 @@ const InputField: React.FC<InputFieldType> = ({
         error={!!error}
         helperText={errorMessage}
       />
-    </div>
+    </>
   )
 }
 
