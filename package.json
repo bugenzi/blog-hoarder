@@ -87,7 +87,8 @@
     "reflect-metadata": "^0.1.13",
     "ts-jest": "^27.0.5",
     "type-graphql": "^1.1.1",
-    "urql": "^2.0.5"
+    "urql": "^2.0.5",
+    "yup": "^0.32.9"
   },
   "mikro-orm": {
     "useTsNode": true,
