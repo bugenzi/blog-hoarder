@@ -16,13 +16,16 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'jest', 'prettier'],
   rules: {
-    'prettier/prettier': [
-      'warn',
-      {
-        singleQuote: true,
-        semi: true,
-      },
-    ],
+    'react/react-in-jsx-scope': 'off',
+    // 'prettier/prettier': [
+    //   'warn',
+    //   {
+    //     singleQuote: true,
+    //     semi: true,
+    //   },
+    // ],
+    'quotes': ['error', 'single'],
+    'jsx-quotes': ['error', 'prefer-double'],
     'react/jsx-filename-extension': [
       2,
       { extensions: ['.js', '.jsx', '.ts', '.tsx'] },

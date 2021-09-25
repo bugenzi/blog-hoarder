@@ -51,8 +51,11 @@
     "webpack-dev-server": "^4.1.0"
   },
   "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
     "@mikro-orm/core": "^4.5.9",
     "@mikro-orm/postgresql": "^4.5.9",
+    "@mui/material": "^5.0.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@types/connect-redis": "^0.0.17",
     "@types/express": "^4.17.13",
@@ -70,6 +73,7 @@
     "eslint-plugin-jest": "^24.4.2",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "formik": "^2.2.9",
     "graphql": "^15.6.0",
     "mikro-orm": "^4.5.9",
     "next": "^11.1.2",
@@ -82,7 +86,8 @@
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "ts-jest": "^27.0.5",
-    "type-graphql": "^1.1.1"
+    "type-graphql": "^1.1.1",
+    "urql": "^2.0.5"
   },
   "mikro-orm": {
     "useTsNode": true,
