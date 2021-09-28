@@ -5,10 +5,9 @@ import { useMutation } from 'urql'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
 import validationSchema from '../utils/validations'
-import { REGISTER_MUTATION } from '../utils/graphqlSchema'
 
 function Login() {
-  const [, register] = useMutation(REGISTER_MUTATION)
+  const [, register] = useMutation()
   return (
     <Wrapper>
       <Formik

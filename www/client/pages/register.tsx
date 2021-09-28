@@ -1,16 +1,18 @@
 import * as React from 'react'
 import { Formik, Form } from 'formik'
 import { Button, Link, Stack, Box, CardHeader, Typography } from '@mui/material'
-import { useMutation } from 'urql'
+// import { useMutation } from 'urql'
 import Image from 'next/image'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
 import validationSchema from '../utils/validations'
-import { REGISTER_MUTATION } from '../utils/graphqlSchema'
+// import { REGISTER_MUTATION } from '../utils/graphqlSchema'
 import ImgSrc from '../assets/img/register.gif'
+import { useRegistrationMutation } from '../generated/graphql'
+import toMapError from '../utils/mapErrors'
 
 function Register() {
-  const [, register] = useMutation(REGISTER_MUTATION)
+  const [, register] = useRegistrationMutation()
   return (
     <Wrapper>
       <Box
@@ -43,13 +45,15 @@ function Register() {
             password: '',
           }}
           validationSchema={validationSchema}
-          onSubmit={(values, actions) => {
+          onSubmit={async (values, { setErrors, setSubmitting }) => {
             setTimeout(() => {
               register(values).then((res) => {
-                console.log(res.data.register.errors)
+                if (res.data?.register.errors) {
+                  setErrors(toMapError(res.data.register.errors))
+                }
               })
               // you have to clean up
-              actions.setSubmitting(false)
+              setSubmitting(false)
             }, 500)
           }}
         >

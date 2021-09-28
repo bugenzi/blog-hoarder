@@ -34,9 +34,7 @@ export default class UserResolver {
     } catch (error) {
       if (error.code === '23505') {
         return {
-          errors: [
-            { field: 'Registration error', message: 'Name is already taken' },
-          ],
+          errors: [{ field: 'username', message: 'Name is already taken' }],
         }
       }
     }
