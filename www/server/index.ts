@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { MikroORM } from 'mikro-orm'
+// import { MikroORM } from 'mikro-orm'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
@@ -7,15 +7,25 @@ import redis from 'redis'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
 import cors from 'cors'
-import mikroOrmConfig from './mikro-orm.config'
+// import mikroOrmConfig from './mikro-orm.config'
+import { createConnection } from 'typeorm'
 import UserResolver from './src/resolver/user'
 import { MyContext } from './types'
 import TestResolver from './src/resolver/test'
 import { __prod__ } from './constants'
+import User from './src/entities/User'
 
 const intializeServer = async () => {
-  const orm = await MikroORM.init(mikroOrmConfig)
-  await orm.getMigrator().up()
+  const conn = await createConnection({
+    type: 'postgres',
+    url: 'postgresql://postgres:malosutra123@localhost:5432/hoarderDb2',
+    logging: true,
+    synchronize: true,
+    entities: [User],
+  })
+
+  // const orm = await MikroORM.init(mikroOrmConfig)
+  // await orm.getMigrator().up()
 
   const app = express()
   // const corsOptions = {
@@ -51,7 +61,7 @@ const intializeServer = async () => {
     context: ({ req, res }): MyContext => ({
       req,
       res,
-      em: orm.em,
+      orm: conn,
     }),
   })
   await apollo.start()

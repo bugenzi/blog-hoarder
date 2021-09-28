@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { Connection, EntityManager, IDatabaseDriver } from '@mikro-orm/core'
 import { Request, Response } from 'express'
+import { Connection } from 'typeorm'
 
 export type MyContext = {
-  em: EntityManager<IDatabaseDriver<Connection>>
   req: Request
   res: Response
+  orm: Connection
 }
 
 // ----- Helps with the fixing anyoing bug with req and sessions
