@@ -63,7 +63,7 @@ export default class UserResolver {
       username: options.username,
     })
 
-    const isValid = argon2.verify(options.password, user.password)
+    const isValid = argon2.verify(user.password, options.password)
 
     if (!isValid) {
       return {

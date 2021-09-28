@@ -4,7 +4,7 @@ import React from 'react'
 const HomePage: React.FC = () => (
   <div>
     <h1>Hello, world!</h1>
-    <a href="test">Wubalubadub dubb</a>
+    <a href="/register">Wubalubadub dubb</a>
   </div>
 )
 

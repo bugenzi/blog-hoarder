@@ -6,12 +6,11 @@ import Image from 'next/image'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
 import validationSchema from '../utils/validations'
-import { LOGIN_MUTATION } from '../utils/graphqlSchema'
+import { REGISTER_MUTATION } from '../utils/graphqlSchema'
 import ImgSrc from '../assets/img/register.gif'
 
 function Register() {
-  const [, register] = useMutation(LOGIN_MUTATION)
-
+  const [, register] = useMutation(REGISTER_MUTATION)
   return (
     <Wrapper>
       <Box
@@ -37,6 +36,7 @@ function Register() {
             </Typography>
           }
         />
+
         <Formik
           initialValues={{
             username: '',
@@ -45,8 +45,9 @@ function Register() {
           validationSchema={validationSchema}
           onSubmit={(values, actions) => {
             setTimeout(() => {
-              register(values)
-              alert(JSON.stringify(values))
+              register(values).then((res) => {
+                console.log(res.data.register.errors)
+              })
               // you have to clean up
               actions.setSubmitting(false)
             }, 500)
@@ -76,9 +77,14 @@ function Register() {
                   </Button>
                 )}
                 <Link margin="normal" align="center" href="/login">
-                  Already have an account{' '}
+                  <Typography>Already have an account</Typography>
                 </Link>
               </Stack>
+              {/* <Snackbar
+                type="success"
+                snackbarMessage="It worksss kindaaa"
+                open
+              /> */}
             </Form>
           )}
         </Formik>

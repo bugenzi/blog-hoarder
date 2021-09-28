@@ -48,7 +48,11 @@ const intializeServer = async () => {
       resolvers: [UserResolver, TestResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ req, res, em: orm.em }),
+    context: ({ req, res }): MyContext => ({
+      req,
+      res,
+      em: orm.em,
+    }),
   })
   await apollo.start()
   // super cool method that integrates cors body parser and playground for you
