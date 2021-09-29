@@ -25,7 +25,9 @@ function Register() {
   const router = useRouter()
   const [, register] = useRegistrationMutation()
   return (
-    <Wrapper csx={{ width: { lg: '600px' }, mt: '5rem' }}>
+    <Wrapper
+      csx={{ width: { xs: '100%', sm: '100%', md: '600px' }, mt: '5rem' }}
+    >
       <Formik
         initialValues={{
           username: '',

@@ -23,7 +23,8 @@ function Login() {
         height: { xs: '100vh' },
         flexDirection: {
           xs: 'column-reverse',
-          md: 'column-reverse',
+          md: 'row',
+          lg: 'row',
           xl: 'row',
         },
       }}
@@ -31,7 +32,7 @@ function Login() {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', md: 'column', lg: 'column' },
+          flexDirection: { xs: 'column', md: 'column', lg: 'row' },
           justifyContent: 'space-evenly',
           alignItems: 'center',
           bgcolor: 'background.paper',
