@@ -2,6 +2,8 @@
 import { AppProps } from 'next/app'
 import { ThemeProvider } from '@mui/material'
 import { createClient, Provider } from 'urql'
+import CssBaseline from '@mui/material/CssBaseline'
+
 import theme from '../Component/Theme'
 
 const client = createClient({
@@ -16,6 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider value={client}>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
     </Provider>
