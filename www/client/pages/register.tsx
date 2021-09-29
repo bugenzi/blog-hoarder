@@ -3,6 +3,7 @@ import { Formik, Form } from 'formik'
 import { Button, Link, Stack, Box, CardHeader, Typography } from '@mui/material'
 // import { useMutation } from 'urql'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
 import validationSchema from '../utils/validations'
@@ -13,6 +14,7 @@ import toMapError from '../utils/mapErrors'
 
 function Register() {
   const [, register] = useRegistrationMutation()
+  const router = useRouter()
   return (
     <Wrapper>
       <Box
@@ -50,6 +52,8 @@ function Register() {
               register(values).then((res) => {
                 if (res.data?.register.errors) {
                   setErrors(toMapError(res.data.register.errors))
+                } else if (res.data?.register.user) {
+                  router.push('/')
                 }
               })
               // you have to clean up
@@ -84,11 +88,6 @@ function Register() {
                   <Typography>Already have an account</Typography>
                 </Link>
               </Stack>
-              {/* <Snackbar
-                type="success"
-                snackbarMessage="It worksss kindaaa"
-                open
-              /> */}
             </Form>
           )}
         </Formik>

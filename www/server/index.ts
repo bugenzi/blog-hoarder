@@ -23,15 +23,8 @@ const intializeServer = async () => {
     synchronize: true,
     entities: [User],
   })
-
-  // const orm = await MikroORM.init(mikroOrmConfig)
-  // await orm.getMigrator().up()
-
   const app = express()
-  // const corsOptions = {
-  //   origin: 'http://localhost:3000' || '*',
-  //   credentials: true, // <-- REQUIRED backend setting
-  // }
+
   const RedisStore = connectRedis(session)
   const redisClient = redis.createClient()
   app.use(cors({ credentials: true }))
