@@ -1,13 +1,11 @@
 import * as React from 'react'
 import { Formik, Form } from 'formik'
 import { Button, Link, Stack, Box, CardHeader, Typography } from '@mui/material'
-// import { useMutation } from 'urql'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
 import validationSchema from '../utils/validations'
-// import { REGISTER_MUTATION } from '../utils/graphqlSchema'
 import ImgSrc from '../assets/img/register.gif'
 import { useLoginMutation } from '../generated/graphql'
 import toMapError from '../utils/mapErrors'
@@ -20,7 +18,7 @@ function Login() {
       csx={{
         bgcolor: 'error.main',
         mt: { xl: '5rem' },
-        height: { xs: '100vh' },
+        height: { xs: '100vh', md: '600px' },
         flexDirection: {
           xs: 'column-reverse',
           md: 'row',
@@ -32,7 +30,7 @@ function Login() {
       <Box
         sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', md: 'column', lg: 'row' },
+          flexDirection: 'column',
           justifyContent: 'space-evenly',
           alignItems: 'center',
           bgcolor: 'background.paper',
@@ -40,8 +38,9 @@ function Login() {
           borderRadius: '12px',
           boxShadow: 1,
           fontWeight: 'bold',
-          padding: '15px',
-          height: '50%',
+          padding: '30px',
+          height: '70%',
+          width: '500px',
           mt: 'auto',
           mb: 'auto',
         }}

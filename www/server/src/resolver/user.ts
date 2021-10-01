@@ -98,4 +98,16 @@ export default class UserResolver {
     }
     return { users }
   }
+
+  @Query(() => User)
+  async me(@Ctx() { orm, req }: MyContext) {
+    // const users = await em.find(User, {})
+    const user = await orm.manager.findOne(User, { id: req.session.userId })
+    if (!user) {
+      return {
+        errors: [{ field: 'Users', message: 'No user something went wrong' }],
+      }
+    }
+    return user
+  }
 }

@@ -8,11 +8,9 @@ import theme from '../Component/Theme'
 
 const client = createClient({
   url: 'http://localhost:4000/graphql',
-
-  // ------ work in progress
-  // fetchOptions: {
-  //   credentials: 'include',
-  // },
+  fetchOptions: {
+    credentials: 'include',
+  },
 })
 function MyApp({ Component, pageProps }: AppProps) {
   return (

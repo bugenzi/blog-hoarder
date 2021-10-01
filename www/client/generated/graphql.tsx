@@ -39,6 +39,7 @@ export type MutationRegisterArgs = {
 export type Query = {
   __typename?: 'Query';
   getUsers: UserResponse;
+  me: User;
   test: Scalars['String'];
 };
 
@@ -78,6 +79,11 @@ export type RegistrationMutationVariables = Exact<{
 
 export type RegistrationMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', username: string, createdAt: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', username: string, id: number } };
+
 
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
@@ -114,4 +120,16 @@ export const RegistrationDocument = gql`
 
 export function useRegistrationMutation() {
   return Urql.useMutation<RegistrationMutation, RegistrationMutationVariables>(RegistrationDocument);
+};
+export const MeDocument = gql`
+    query Me {
+  me {
+    username
+    id
+  }
+}
+    `;
+
+export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };

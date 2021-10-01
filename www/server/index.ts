@@ -27,7 +27,7 @@ const intializeServer = async () => {
 
   const RedisStore = connectRedis(session)
   const redisClient = redis.createClient()
-  app.use(cors({ credentials: true }))
+  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
   app.use(
     session({
       name: 'qid',
@@ -59,7 +59,7 @@ const intializeServer = async () => {
   })
   await apollo.start()
   // super cool method that integrates cors body parser and playground for you
-  apollo.applyMiddleware({ app })
+  apollo.applyMiddleware({ app, cors: false })
   app.listen(4000, () => console.log('server started at 4000'))
 }
 
