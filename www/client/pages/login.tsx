@@ -86,6 +86,7 @@ function Login() {
               />
               <InputField
                 name="password"
+                type="password"
                 label="Password"
                 errorMessage={errors.password}
               />

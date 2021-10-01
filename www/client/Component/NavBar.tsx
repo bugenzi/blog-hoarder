@@ -4,18 +4,18 @@ import { AppBar, Box, Typography, Button, Avatar } from '@mui/material'
 import Link from 'next/link'
 import CircularProgress from '@mui/material/CircularProgress'
 import { NavLinks, NavSection } from '../assets/style/Navbar'
-import { useMeQuery } from '../generated/graphql'
+import { useMeQuery, useLogoutMutation } from '../generated/graphql'
 
 // import {} from "@mui/material/styles"
 const NavBar: React.FC = () => {
   const [{ data, fetching }] = useMeQuery()
+  const [, logout] = useLogoutMutation()
   let body
   if (fetching) {
     body = <CircularProgress />
-  } else if (!data?.me.username) {
+  } else if (!data?.me) {
     body = (
       <>
-        {' '}
         <Link href="login">
           <Typography
             sx={{
@@ -39,8 +39,7 @@ const NavBar: React.FC = () => {
   } else {
     body = (
       <>
-        <Button variant="outlined" color="error">
-          {' '}
+        <Button onClick={() => logout()} variant="outlined" color="error">
           Logout
         </Button>
         <Typography>{data.me.username} </Typography>{' '}

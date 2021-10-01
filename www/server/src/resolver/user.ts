@@ -99,7 +99,7 @@ export default class UserResolver {
     return { users }
   }
 
-  @Query(() => User)
+  @Query(() => User, { nullable: true })
   async me(@Ctx() { orm, req }: MyContext) {
     // const users = await em.find(User, {})
     const user = await orm.manager.findOne(User, { id: req.session.userId })
@@ -109,5 +109,19 @@ export default class UserResolver {
       }
     }
     return user
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise((response) =>
+      req.session.destroy((err) => {
+        if (err) {
+          response(false)
+          return
+        }
+        res.clearCookie('qid')
+        response(true)
+      })
+    )
   }
 }

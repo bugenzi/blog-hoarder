@@ -13,6 +13,7 @@ type InputFieldType = InputHTMLAttributes<HTMLInputElement> & {
 const InputField: React.FC<InputFieldType> = ({
   label,
   errorMessage,
+  type,
   ...props
 }) => {
   const [field, { error }] = useField(props)
@@ -25,6 +26,7 @@ const InputField: React.FC<InputFieldType> = ({
         id={field.name}
         name={field.name}
         label={label}
+        type={type}
         error={!!error}
         helperText={errorMessage}
       />

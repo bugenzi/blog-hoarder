@@ -23,6 +23,7 @@ export type FieldError = {
 export type Mutation = {
   __typename?: 'Mutation';
   login: UserResponse;
+  logout: Scalars['Boolean'];
   register: UserResponse;
 };
 
@@ -39,7 +40,7 @@ export type MutationRegisterArgs = {
 export type Query = {
   __typename?: 'Query';
   getUsers: UserResponse;
-  me: User;
+  me?: Maybe<User>;
   test: Scalars['String'];
 };
 
@@ -71,18 +72,23 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', username: string, id: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
 export type RegistrationMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
 }>;
 
 
-export type RegistrationMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', username: string, createdAt: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type RegistrationMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', username: string, id: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', username: string, id: number } };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', username: string, id: number }> };
 
 
 export const LoginDocument = gql`
@@ -103,12 +109,21 @@ export const LoginDocument = gql`
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
 };
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
 export const RegistrationDocument = gql`
     mutation Registration($username: String!, $password: String!) {
   register(options: {username: $username, password: $password}) {
     user {
       username
-      createdAt
+      id
     }
     errors {
       field

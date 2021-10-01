@@ -130,6 +130,7 @@ function Register() {
             <InputField
               name="password"
               label="Password"
+              type="password"
               // errorMessage={errors.password}
             />
 
