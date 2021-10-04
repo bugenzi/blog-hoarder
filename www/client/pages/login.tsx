@@ -66,17 +66,16 @@ function Login() {
           }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setErrors, setSubmitting }) => {
-            setTimeout(() => {
-              login(values).then((res) => {
-                if (res.data?.login.errors) {
-                  setErrors(toMapError(res.data.login.errors))
-                } else if (res.data?.login.user) {
-                  router.push('/')
-                }
-              })
-              // you have to clean up
-              setSubmitting(false)
-            }, 500)
+            login(values).then((res) => {
+              console.log(res)
+              if (res.data?.login.errors) {
+                setErrors(toMapError(res.data.login.errors))
+              } else if (res.data?.login.user) {
+                router.push('/')
+              }
+            })
+            // you have to clean up
+            setSubmitting(false)
           }}
         >
           {({ errors, isSubmitting }) => (

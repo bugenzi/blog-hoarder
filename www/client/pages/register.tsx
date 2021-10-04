@@ -30,6 +30,7 @@ function Register() {
     >
       <Formik
         initialValues={{
+          email: '',
           username: '',
           password: '',
         }}
@@ -127,6 +128,7 @@ function Register() {
               label="Username"
               // errorMessage={errors.username}
             />
+
             <InputField
               name="password"
               label="Password"

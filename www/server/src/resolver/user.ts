@@ -52,24 +52,25 @@ export default class UserResolver {
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg('options') options: UserCredInput,
+    @Arg('usernameOrEmail') usernameOrEmail: string,
+    @Arg('password') password: string,
     @Ctx() { orm, req }: MyContext
   ): Promise<UserResponse> {
-    if (options.password.length <= 2) {
-      return {
-        errors: [{ field: 'password', message: 'Password is to short' }],
-      }
-    }
-    if (options.username.length <= 2) {
-      return {
-        errors: [{ field: 'username', message: 'Username is to short' }],
-      }
+    const isEmail = usernameOrEmail.includes('@')
+      ? { email: usernameOrEmail }
+      : { username: usernameOrEmail }
+    const queryObject = {
+      name: isEmail.email ? 'user.email = :email' : 'user.username = :username',
+      value: isEmail,
     }
 
-    const user = await orm.manager.findOneOrFail(User, {
-      where: { username: options.username },
-    })
-    const isValid = await argon2.verify(user.password, options.password)
+    const user = await orm
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .where(queryObject.name, { ...queryObject.value })
+      .getOne()
+
+    const isValid = await argon2.verify(user.password, password)
     if (!isValid) {
       return {
         errors: [

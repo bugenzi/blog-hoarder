@@ -27,6 +27,7 @@ const intializeServer = async () => {
     entities: [User],
   })
   const app = express()
+  conn.manager.delete(User, {})
 
   const RedisStore = connectRedis(session)
   const redisClient = redis.createClient()
