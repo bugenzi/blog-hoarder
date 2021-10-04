@@ -3,12 +3,14 @@ import { Formik, Form } from 'formik'
 import { Button, Link, Stack, Box, CardHeader, Typography } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { withUrqlClient } from 'next-urql'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
 import validationSchema from '../utils/validations'
 import ImgSrc from '../assets/img/register.gif'
 import { useLoginMutation } from '../generated/graphql'
 import toMapError from '../utils/mapErrors'
+import createUrqlClient from '../utils/createUrqlClient'
 
 function Login() {
   const [, login] = useLoginMutation()
@@ -115,4 +117,4 @@ function Login() {
   )
 }
 
-export default Login
+export default withUrqlClient(createUrqlClient, { ssr: true })(Login)

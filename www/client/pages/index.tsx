@@ -1,6 +1,8 @@
 import { Box } from '@mui/system'
+import { withUrqlClient } from 'next-urql'
 import React from 'react'
 import NavBar from '../Component/NavBar'
+import createUrqlClient from '../utils/createUrqlClient'
 
 /* eslint-disable no-undef */
 const HomePage: React.FC = () => (
@@ -13,4 +15,6 @@ const HomePage: React.FC = () => (
   </div>
 )
 
-export default HomePage
+// export default HomePage
+
+export default withUrqlClient(createUrqlClient, { ssr: true })(HomePage)

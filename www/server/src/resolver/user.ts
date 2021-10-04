@@ -57,25 +57,24 @@ export default class UserResolver {
   ): Promise<UserResponse> {
     if (options.password.length <= 2) {
       return {
-        errors: [{ field: 'Passowrd', message: 'Password is to short' }],
+        errors: [{ field: 'password', message: 'Password is to short' }],
       }
     }
     if (options.username.length <= 2) {
       return {
-        errors: [{ field: 'Username', message: 'Username is to short' }],
+        errors: [{ field: 'username', message: 'Username is to short' }],
       }
     }
 
     const user = await orm.manager.findOneOrFail(User, {
       where: { username: options.username },
     })
-    const isValid = argon2.verify(user.password, options.password)
-
+    const isValid = await argon2.verify(user.password, options.password)
     if (!isValid) {
       return {
         errors: [
           {
-            field: 'Passowrd',
+            field: 'username',
             message: 'Wrong credentials',
           },
         ],
@@ -105,7 +104,9 @@ export default class UserResolver {
     const user = await orm.manager.findOne(User, { id: req.session.userId })
     if (!user) {
       return {
-        errors: [{ field: 'Users', message: 'No user something went wrong' }],
+        errors: [
+          { field: 'username', message: 'No user something went wrong' },
+        ],
       }
     }
     return user
