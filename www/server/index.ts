@@ -9,16 +9,19 @@ import connectRedis from 'connect-redis'
 import cors from 'cors'
 // import mikroOrmConfig from './mikro-orm.config'
 import { createConnection } from 'typeorm'
+import dotenv from 'dotenv'
 import UserResolver from './src/resolver/user'
 import { MyContext } from './types'
 import TestResolver from './src/resolver/test'
 import { __prod__ } from './constants'
 import User from './src/entities/User'
 
+// dotenv.config()
 const intializeServer = async () => {
+  dotenv.config()
   const conn = await createConnection({
     type: 'postgres',
-    url: 'postgresql://postgres:malosutra123@localhost:5432/hoarderDb2',
+    url: process.env.DB_URL,
     logging: true,
     synchronize: true,
     entities: [User],
@@ -27,7 +30,7 @@ const intializeServer = async () => {
 
   const RedisStore = connectRedis(session)
   const redisClient = redis.createClient()
-  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+  app.use(cors({ credentials: true, origin: process.env.CLIENT_URL || '*' }))
   app.use(
     session({
       name: 'qid',
@@ -60,7 +63,9 @@ const intializeServer = async () => {
   await apollo.start()
   // super cool method that integrates cors body parser and playground for you
   apollo.applyMiddleware({ app, cors: false })
-  app.listen(4000, () => console.log('server started at 4000'))
+  app.listen(process.env.PORT || 4000, () =>
+    console.log('server started at 4000')
+  )
 }
 
 intializeServer()
