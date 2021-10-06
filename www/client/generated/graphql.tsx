@@ -14,6 +14,29 @@ export type Scalars = {
   Float: number;
 };
 
+export type Blog = {
+  __typename?: 'Blog';
+  author: Scalars['String'];
+  blogType: Array<Scalars['String']>;
+  createdAt: Scalars['String'];
+  id: Scalars['Float'];
+  link: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type BlogInput = {
+  BlogType: Array<Scalars['String']>;
+  author: Scalars['String'];
+  link: Scalars['String'];
+};
+
+export type BlogResponse = {
+  __typename?: 'BlogResponse';
+  blog?: Maybe<Blog>;
+  blogs?: Maybe<Array<Blog>>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -24,12 +47,19 @@ export type Mutation = {
   __typename?: 'Mutation';
   login: UserResponse;
   logout: Scalars['Boolean'];
+  postBlog: BlogResponse;
   register: UserResponse;
 };
 
 
 export type MutationLoginArgs = {
-  options: UserCredInput;
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationPostBlogArgs = {
+  options: BlogInput;
 };
 
 
@@ -39,6 +69,7 @@ export type MutationRegisterArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getBlogs: BlogResponse;
   getUsers: UserResponse;
   me?: Maybe<User>;
   test: Scalars['String'];
@@ -67,7 +98,7 @@ export type UserResponse = {
 export type UserFragmentFragment = { __typename?: 'User', id: number, username: string };
 
 export type LoginMutationVariables = Exact<{
-  username: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
   password: Scalars['String'];
 }>;
 
@@ -87,6 +118,11 @@ export type RegistrationMutationVariables = Exact<{
 
 export type RegistrationMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', id: number, username: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
+export type GetBlogQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBlogQuery = { __typename?: 'Query', getBlogs: { __typename?: 'BlogResponse', blogs?: Maybe<Array<{ __typename?: 'Blog', id: number, author: string, blogType: Array<string>, link: string }>> } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -99,8 +135,8 @@ export const UserFragmentFragmentDoc = gql`
 }
     `;
 export const LoginDocument = gql`
-    mutation Login($username: String!, $password: String!) {
-  login(options: {username: $username, password: $password}) {
+    mutation Login($usernameOrEmail: String!, $password: String!) {
+  login(usernameOrEmail: $usernameOrEmail, password: $password) {
     user {
       ...UserFragment
     }
@@ -140,6 +176,22 @@ export const RegistrationDocument = gql`
 
 export function useRegistrationMutation() {
   return Urql.useMutation<RegistrationMutation, RegistrationMutationVariables>(RegistrationDocument);
+};
+export const GetBlogDocument = gql`
+    query GetBlog {
+  getBlogs {
+    blogs {
+      id
+      author
+      blogType
+      link
+    }
+  }
+}
+    `;
+
+export function useGetBlogQuery(options: Omit<Urql.UseQueryArgs<GetBlogQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetBlogQuery>({ query: GetBlogDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

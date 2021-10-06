@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
-import redis from 'redis'
+import Redis from 'ioredis'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
 import cors from 'cors'
@@ -31,8 +31,8 @@ const intializeServer = async () => {
   conn.manager.delete(User, {})
 
   const RedisStore = connectRedis(session)
-  const redisClient = redis.createClient()
-  app.use(cors({ credentials: true, origin: '*' }))
+  const redisClient = new Redis()
+  app.use(cors({ credentials: true, origin: process.env.CLIENT_URL || '*' }))
   app.use(
     session({
       name: 'qid',
@@ -60,6 +60,7 @@ const intializeServer = async () => {
       req,
       res,
       orm: conn,
+      redis: redisClient,
     }),
   })
   await apollo.start()

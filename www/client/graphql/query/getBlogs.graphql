@@ -1,0 +1,10 @@
+query GetBlog {
+  getBlogs {
+    blogs {
+      id
+      author
+      blogType
+      link
+    }
+  }
+}
