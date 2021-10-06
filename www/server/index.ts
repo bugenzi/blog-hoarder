@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-// import { MikroORM } from 'mikro-orm'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import { buildSchema } from 'type-graphql'
@@ -14,6 +13,8 @@ import { MyContext } from './types'
 import TestResolver from './src/resolver/test'
 import { __prod__ } from './constants'
 import User from './src/entities/User'
+import Blog from './src/entities/Blog'
+import BlogResolver from './src/resolver/blog'
 
 // dotenv.config()
 const intializeServer = async () => {
@@ -24,14 +25,14 @@ const intializeServer = async () => {
     url: process.env.DB_URL,
     logging: true,
     synchronize: true,
-    entities: [User],
+    entities: [User, Blog],
   })
   const app = express()
   conn.manager.delete(User, {})
 
   const RedisStore = connectRedis(session)
   const redisClient = redis.createClient()
-  app.use(cors({ credentials: true, origin: process.env.CLIENT_URL || '*' }))
+  app.use(cors({ credentials: true, origin: '*' }))
   app.use(
     session({
       name: 'qid',
@@ -52,7 +53,7 @@ const intializeServer = async () => {
   )
   const apollo = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, TestResolver],
+      resolvers: [UserResolver, TestResolver, BlogResolver],
       validate: false,
     }),
     context: ({ req, res }): MyContext => ({
