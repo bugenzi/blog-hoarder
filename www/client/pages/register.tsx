@@ -15,15 +15,17 @@ import {
 import { useRouter } from 'next/router'
 import PersonIcon from '@mui/icons-material/Person'
 import PasswordIcon from '@mui/icons-material/Password'
+import { withUrqlClient } from 'next-urql'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
 import { registerValidation } from '../utils/validations'
-import { useRegistrationMutation } from '../generated/graphql'
+import { useRegisterMutation } from '../generated/graphql'
 import toMapError from '../utils/mapErrors'
+import createUrqlClient from '../utils/createUrqlClient'
 
 function Register() {
   const router = useRouter()
-  const [, register] = useRegistrationMutation()
+  const [, register] = useRegisterMutation()
   return (
     <Wrapper
       csx={{ width: { xs: '100%', sm: '100%', md: '600px' }, mt: '5rem' }}
@@ -36,7 +38,7 @@ function Register() {
         }}
         validationSchema={registerValidation}
         onSubmit={async (values, { setErrors, setSubmitting }) => {
-          register(values).then((res) => {
+          await register({ registerOptions: values }).then((res) => {
             if (res.data?.register.errors) {
               setErrors(toMapError(res.data.register.errors))
             } else if (res.data?.register.user) {
@@ -99,6 +101,28 @@ function Register() {
                     }
                   />
                 </ListItem>
+                <ListItem sx={{ minWidth: '100%' }}>
+                  <ListItemAvatar>
+                    <Avatar
+                      sx={
+                        isValid
+                          ? { bgcolor: 'success.main' }
+                          : { bgcolor: 'error.main' }
+                      }
+                    >
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      errors.email ? (
+                        <Typography>{errors.email}</Typography>
+                      ) : (
+                        <Typography>A uniqe email</Typography>
+                      )
+                    }
+                  />
+                </ListItem>
                 <ListItem>
                   <ListItemAvatar>
                     <Avatar
@@ -123,6 +147,11 @@ function Register() {
                 </ListItem>
               </List>
             </Box>
+            <InputField
+              name="email"
+              label="Email"
+              // errorMessage={errors.username}
+            />
             <InputField
               name="username"
               label="Username"
@@ -162,4 +191,4 @@ function Register() {
   )
 }
 
-export default Register
+export default withUrqlClient(createUrqlClient, { ssr: true })(Register)

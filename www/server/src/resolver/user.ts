@@ -14,8 +14,14 @@ export default class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UserCredInput,
-    @Ctx() { orm }: MyContext
+    @Ctx() { orm, req }: MyContext
   ): Promise<UserResponse> {
+    console.log(options.email)
+    if (!options.email.includes('@')) {
+      return {
+        errors: [{ field: 'email', message: 'Wrong email format' }],
+      }
+    }
     if (options.password.length <= 2) {
       return {
         errors: [{ field: 'Passowrd', message: 'Password is to short' }],
@@ -36,6 +42,7 @@ export default class UserResolver {
         .values({
           username: options.username,
           password: hashedPassword,
+          email: options.email,
           createdAt: new Date(),
           updatedAt: new Date(),
         })
@@ -49,6 +56,7 @@ export default class UserResolver {
         }
       }
     }
+    req.session.userId = user.id
     return { user }
   }
 
@@ -142,7 +150,7 @@ export default class UserResolver {
     const token = v4()
     await redis.set(token, user.id, 'ex', exporationTime) // 24h expiration
     const url = `<a href="http://localhost:3000/reset-password/${token}">Click here to restart your password</a> `
-    sendMail(user.email, url)
+    await sendMail(user.email, url)
 
     return true
   }

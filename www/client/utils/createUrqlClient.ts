@@ -5,7 +5,7 @@ import {
   LogoutMutation,
   MeDocument,
   MeQuery,
-  RegistrationMutation,
+  RegisterMutation,
 } from '../generated/graphql'
 import cacheUpdateQuery from './cacheUpdateHelper'
 
@@ -43,8 +43,8 @@ const createUrqlClient = (ssrExchange: any) => ({
               }
             ),
           // eslint-disable-next-line no-unused-vars
-          regiser: (result, _, cache, __) =>
-            cacheUpdateQuery<RegistrationMutation, MeQuery>(
+          register: (result, _, cache, __) =>
+            cacheUpdateQuery<RegisterMutation, MeQuery>(
               cache,
               { query: MeDocument },
               result,
@@ -52,6 +52,7 @@ const createUrqlClient = (ssrExchange: any) => ({
                 if (res.register.errors) {
                   return query
                 }
+                console.log('CACHE GENERATOR', res.register.user)
                 return { me: res.register.user }
               }
             ),

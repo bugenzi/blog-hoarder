@@ -90,6 +90,7 @@ export type User = {
 };
 
 export type UserCredInput = {
+  email: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
 };
@@ -123,13 +124,12 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
-export type RegistrationMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
+export type RegisterMutationVariables = Exact<{
+  registerOptions: UserCredInput;
 }>;
 
 
-export type RegistrationMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', id: number, username: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', id: number, username: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type GetBlogQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -182,9 +182,9 @@ export const LogoutDocument = gql`
 export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
-export const RegistrationDocument = gql`
-    mutation Registration($username: String!, $password: String!) {
-  register(options: {username: $username, password: $password}) {
+export const RegisterDocument = gql`
+    mutation Register($registerOptions: UserCredInput!) {
+  register(options: $registerOptions) {
     user {
       ...UserFragment
     }
@@ -196,8 +196,8 @@ export const RegistrationDocument = gql`
 }
     ${UserFragmentFragmentDoc}`;
 
-export function useRegistrationMutation() {
-  return Urql.useMutation<RegistrationMutation, RegistrationMutationVariables>(RegistrationDocument);
+export function useRegisterMutation() {
+  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const GetBlogDocument = gql`
     query GetBlog {

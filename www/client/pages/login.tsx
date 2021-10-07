@@ -6,7 +6,6 @@ import { useRouter } from 'next/router'
 import { withUrqlClient } from 'next-urql'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
-import { loginValdiation } from '../utils/validations'
 // import ImgSrc from '../assets/img/register.gif'
 import { useLoginMutation } from '../generated/graphql'
 import toMapError from '../utils/mapErrors'
@@ -55,13 +54,12 @@ function Login() {
 
         <Formik
           initialValues={{
-            username: '',
+            usernameOrEmail: '',
             password: '',
           }}
-          validationSchema={loginValdiation}
           onSubmit={async (values, { setErrors, setSubmitting }) => {
             login({
-              usernameOrEmail: values.username,
+              usernameOrEmail: values.usernameOrEmail,
               password: values.password,
             }).then((res) => {
               console.log(res)
@@ -80,7 +78,7 @@ function Login() {
               <InputField
                 name="username"
                 label="Username"
-                errorMessage={errors.username}
+                errorMessage={errors.usernameOrEmail}
               />
               <InputField
                 name="password"

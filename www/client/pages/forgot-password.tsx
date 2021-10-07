@@ -1,9 +1,11 @@
 import { Button, Stack, Typography } from '@mui/material'
 import { Form, Formik } from 'formik'
+import { withUrqlClient } from 'next-urql'
 import React from 'react'
 import InputField from '../Component/InputField'
 import Wrapper from '../Component/Wrapper'
 import { useForgotPasswordMutation } from '../generated/graphql'
+import createUrqlClient from '../utils/createUrqlClient'
 
 const ForgotPassowrd: React.FC = () => {
   const [, forgotPassword] = useForgotPasswordMutation()
@@ -22,7 +24,7 @@ const ForgotPassowrd: React.FC = () => {
         // validationSchema={validationSchema}
         onSubmit={async (value, { setSubmitting }) => {
           // you have to clean up
-          forgotPassword(value)
+          await forgotPassword(value)
           setSubmitting(false)
         }}
       >
@@ -53,4 +55,4 @@ const ForgotPassowrd: React.FC = () => {
   )
 }
 
-export default ForgotPassowrd
+export default withUrqlClient(createUrqlClient, { ssr: true })(ForgotPassowrd)

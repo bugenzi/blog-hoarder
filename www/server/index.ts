@@ -28,11 +28,10 @@ const intializeServer = async () => {
     entities: [User, Blog],
   })
   const app = express()
-  conn.manager.delete(User, {})
 
   const RedisStore = connectRedis(session)
   const redisClient = new Redis()
-  app.use(cors({ credentials: true, origin: '*' }))
+  app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
   app.use(
     session({
       name: 'qid',
