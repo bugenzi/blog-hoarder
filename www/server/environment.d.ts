@@ -7,6 +7,7 @@ declare global {
       DB_URL: string
       CLIENT_URL: string
       PORT: string
+      UID_SECRET: string
     }
   }
 }

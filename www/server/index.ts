@@ -32,7 +32,7 @@ const intializeServer = async () => {
 
   const RedisStore = connectRedis(session)
   const redisClient = new Redis()
-  app.use(cors({ credentials: true, origin: process.env.CLIENT_URL || '*' }))
+  app.use(cors({ credentials: true, origin: '*' }))
   app.use(
     session({
       name: 'qid',

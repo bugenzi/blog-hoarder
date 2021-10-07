@@ -1,32 +1,25 @@
 import * as React from 'react'
 import { Formik, Form } from 'formik'
 import { Button, Link, Stack, Box, CardHeader, Typography } from '@mui/material'
-import Image from 'next/image'
+// import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { withUrqlClient } from 'next-urql'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
-import validationSchema from '../utils/validations'
-import ImgSrc from '../assets/img/register.gif'
+import { loginValdiation } from '../utils/validations'
+// import ImgSrc from '../assets/img/register.gif'
 import { useLoginMutation } from '../generated/graphql'
 import toMapError from '../utils/mapErrors'
 import createUrqlClient from '../utils/createUrqlClient'
-
+// import {xs} from "@mui/material"
 function Login() {
   const [, login] = useLoginMutation()
   const router = useRouter()
   return (
     <Wrapper
       csx={{
-        bgcolor: 'error.main',
+        width: '100%',
         mt: { xl: '5rem' },
-        height: { xs: '100vh', md: '600px' },
-        flexDirection: {
-          xs: 'column-reverse',
-          md: 'row',
-          lg: 'row',
-          xl: 'row',
-        },
       }}
     >
       <Box
@@ -35,16 +28,17 @@ function Login() {
           flexDirection: 'column',
           justifyContent: 'space-evenly',
           alignItems: 'center',
-          bgcolor: 'background.paper',
+
           overflow: 'hidden',
           borderRadius: '12px',
           boxShadow: 1,
           fontWeight: 'bold',
           padding: '30px',
           height: '70%',
-          width: '500px',
+          width: { xs: '100%', sm: '100%', md: '600px' },
           mt: 'auto',
           mb: 'auto',
+          margin: 'auto',
         }}
       >
         <CardHeader
@@ -64,9 +58,12 @@ function Login() {
             username: '',
             password: '',
           }}
-          validationSchema={validationSchema}
+          validationSchema={loginValdiation}
           onSubmit={async (values, { setErrors, setSubmitting }) => {
-            login(values).then((res) => {
+            login({
+              usernameOrEmail: values.username,
+              password: values.password,
+            }).then((res) => {
               console.log(res)
               if (res.data?.login.errors) {
                 setErrors(toMapError(res.data.login.errors))
@@ -105,13 +102,14 @@ function Login() {
                 <Link margin="normal" align="center" href="/register">
                   <Typography>Dont hava an account</Typography>
                 </Link>
+                <Link margin="normal" align="center" href="/forgot-password">
+                  <Typography>Forgot my password</Typography>
+                </Link>
               </Stack>
             </Form>
           )}
         </Formik>
       </Box>
-
-      <Image src={ImgSrc} alt="Picture of the author" />
     </Wrapper>
   )
 }

@@ -2,10 +2,12 @@
 /* eslint-disable class-methods-use-this */
 import { Resolver, Ctx, Mutation, Arg, Query } from 'type-graphql'
 import argon2 from 'argon2'
+import { v4 } from 'uuid'
 import { MyContext } from '../../types'
 import User from '../entities/User'
 import UserCredInput from '../utils/UserCredInput'
 import UserResponse from '../utils/UserResponse'
+import sendMail from '../utils/nodemailer'
 
 @Resolver()
 export default class UserResolver {
@@ -125,5 +127,23 @@ export default class UserResolver {
         response(true)
       })
     )
+  }
+
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Arg('email') email: string,
+    @Ctx() { redis, orm }: MyContext
+  ) {
+    const user = await orm.manager.findOne(User, { email })
+    if (!user) {
+      return true
+    }
+    const exporationTime = 60 * 60 * 24
+    const token = v4()
+    await redis.set(token, user.id, 'ex', exporationTime) // 24h expiration
+    const url = `<a href="http://localhost:3000/reset-password/${token}">Click here to restart your password</a> `
+    sendMail(user.email, url)
+
+    return true
   }
 }

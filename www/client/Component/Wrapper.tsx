@@ -10,8 +10,9 @@ interface IWrapperProps {
 function Wrapper({ children, csx }: IWrapperProps) {
   return (
     <Container
-      maxWidth="lg"
+      maxWidth={false}
       sx={{
+        maxWidth: '1200px',
         display: 'flex',
         flexDirection: {
           xs: 'column-reverse',

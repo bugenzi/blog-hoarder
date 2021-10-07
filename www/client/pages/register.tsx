@@ -17,7 +17,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import PasswordIcon from '@mui/icons-material/Password'
 import Wrapper from '../Component/Wrapper'
 import InputField from '../Component/InputField'
-import validationSchema from '../utils/validations'
+import { registerValidation } from '../utils/validations'
 import { useRegistrationMutation } from '../generated/graphql'
 import toMapError from '../utils/mapErrors'
 
@@ -34,7 +34,7 @@ function Register() {
           username: '',
           password: '',
         }}
-        validationSchema={validationSchema}
+        validationSchema={registerValidation}
         onSubmit={async (values, { setErrors, setSubmitting }) => {
           register(values).then((res) => {
             if (res.data?.register.errors) {

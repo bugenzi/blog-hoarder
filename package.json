@@ -73,6 +73,7 @@
     "@types/next": "^9.0.0",
     "@types/nodemailer": "^6.4.4",
     "@types/redis": "^2.8.32",
+    "@types/uuid": "^8.3.1",
     "@urql/exchange-graphcache": "^4.3.5",
     "@zeit/next-typescript": "^1.1.1",
     "apollo-server-express": "^3.3.0",
@@ -107,6 +108,7 @@
     "type-graphql": "^1.1.1",
     "typeorm": "^0.2.37",
     "urql": "^2.0.5",
+    "uuid": "^8.3.2",
     "yup": "^0.32.9"
   },
   "mikro-orm": {
