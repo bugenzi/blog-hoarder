@@ -45,7 +45,7 @@ const ForgotPassowrd: React.FC = () => {
 
             <Stack spacing={2}>
               <Button variant="contained" color="error" type="submit">
-                Login
+                Send
               </Button>
             </Stack>
           </Form>

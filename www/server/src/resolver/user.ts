@@ -85,7 +85,7 @@ export default class UserResolver {
       return {
         errors: [
           {
-            field: 'username',
+            field: 'usernameOrEmail',
             message: 'Wrong credentials',
           },
         ],

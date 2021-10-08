@@ -8,6 +8,8 @@ declare global {
       CLIENT_URL: string
       PORT: string
       UID_SECRET: string
+      SESSION_SECRET: string
+      SESSION_AGE: number
     }
   }
 }

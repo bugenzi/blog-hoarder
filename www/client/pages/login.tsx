@@ -58,11 +58,10 @@ function Login() {
             password: '',
           }}
           onSubmit={async (values, { setErrors, setSubmitting }) => {
-            login({
+            await login({
               usernameOrEmail: values.usernameOrEmail,
               password: values.password,
             }).then((res) => {
-              console.log(res)
               if (res.data?.login.errors) {
                 setErrors(toMapError(res.data.login.errors))
               } else if (res.data?.login.user) {
@@ -76,8 +75,8 @@ function Login() {
           {({ errors, isSubmitting }) => (
             <Form>
               <InputField
-                name="username"
-                label="Username"
+                name="usernameOrEmail"
+                label="usernameOrEmail"
                 errorMessage={errors.usernameOrEmail}
               />
               <InputField

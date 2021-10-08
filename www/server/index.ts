@@ -28,7 +28,7 @@ const intializeServer = async () => {
     entities: [User, Blog],
   })
   const app = express()
-
+  const maxAge = 1000 * 60 * 60 * 24 * 365 * 10
   const RedisStore = connectRedis(session)
   const redisClient = new Redis()
   app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
@@ -40,13 +40,13 @@ const intializeServer = async () => {
         disableTouch: false,
       }),
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
+        maxAge: Number(process.env.SESSION_AGE) || maxAge,
         httpOnly: true,
         sameSite: 'lax',
         secure: __prod__,
       },
       saveUninitialized: false,
-      secret: 'salamasalamagolemasalama',
+      secret: process.env.SESSION_SECRET,
       resave: false,
     })
   )
