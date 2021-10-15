@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  OneToMany,
 } from 'typeorm'
 import { ObjectType, Field } from 'type-graphql'
+import Blog from './Blog'
 
 @ObjectType()
 @Entity()
@@ -24,6 +26,9 @@ export default class User extends BaseEntity {
 
   @Column({ unique: true })
   password!: string
+
+  @OneToMany(() => Blog, (blog) => blog.author)
+  blogs: Blog[]
 
   @Field(() => String)
   @CreateDateColumn()

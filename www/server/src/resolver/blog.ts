@@ -1,22 +1,27 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable class-methods-use-this */
 
-import { Resolver, Ctx, Mutation, Arg, Query } from 'type-graphql'
-// import argon2 from 'argon2'
+import {
+  Resolver,
+  Ctx,
+  Mutation,
+  Arg,
+  Query,
+  UseMiddleware,
+} from 'type-graphql'
 import { MyContext } from '../../types'
 import Blog from '../entities/Blog'
 import BlogInput from '../utils/BlogInput'
 import BlogResponse from '../utils/BlogResponse'
-// import User from '../entities/User'
-// import UserCredInput from '../utils/UserCredInput'
-// import UserResponse from '../utils/UserResponse'
+import isAuth from '../utils/isAuth'
 
 @Resolver()
 export default class BlogResolver {
   @Mutation(() => BlogResponse)
+  @UseMiddleware(isAuth)
   async postBlog(
     @Arg('options') options: BlogInput,
-    @Ctx() { orm }: MyContext
+    @Ctx() { orm, req }: MyContext
   ): Promise<BlogResponse> {
     let blog
     try {
@@ -25,11 +30,12 @@ export default class BlogResolver {
         .insert()
         .into(Blog)
         .values({
-          author: options.author,
+          // authorId: userId,
+          title: options.title,
           link: options.link,
+          text: options.text,
+          authorId: req.session.userId,
           blogType: options.BlogType,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         })
         .returning('*')
         .execute()
@@ -44,7 +50,7 @@ export default class BlogResolver {
   @Query(() => BlogResponse)
   async getBlogs(@Ctx() { orm }: MyContext): Promise<BlogResponse> {
     const blogs = await orm.manager.find(Blog, {})
-
+    console.log(blogs)
     return { blogs }
   }
 }

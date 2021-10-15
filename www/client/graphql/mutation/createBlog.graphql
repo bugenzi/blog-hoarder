@@ -1,0 +1,15 @@
+mutation CreateBlogs($options: BlogInput!) {
+  postBlog(options: $options) {
+    blog {
+      link
+      text
+      id
+      createdAt
+      author
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

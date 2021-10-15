@@ -8,16 +8,17 @@ import createUrqlClient from '../utils/createUrqlClient'
 /* eslint-disable no-undef */
 const HomePage: React.FC = () => {
   const [{ data }] = useGetBlogQuery()
+  console.log(data)
   return (
     <div>
-      <NavBar />
+      <NavBar pageProps={undefined} />
       <Box mt="10%">
         <h1>Hello, world!</h1>
-        <a href="/register">Wubalubadub dubb</a>
+        <a href="/create-post">Wubalubadub dubb</a>
 
         {data?.getBlogs.blogs
-          ? data?.getBlogs.blogs.map((blog) => (
-              <Box key={blog.id}>{blog.author} </Box>
+          ? data?.getBlogs.blogs.map((blog, index) => (
+              <Box key={index}>{blog.title} </Box>
             ))
           : null}
       </Box>

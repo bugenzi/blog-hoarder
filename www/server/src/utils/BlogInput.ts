@@ -6,7 +6,10 @@ export default class BlogInput {
   link: string
 
   @Field()
-  author: string
+  title: string
+
+  @Field()
+  text: string
 
   @Field(() => [String])
   BlogType: string[]

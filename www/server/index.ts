@@ -31,7 +31,7 @@ const intializeServer = async () => {
   const maxAge = 1000 * 60 * 60 * 24 * 365 * 10
   const RedisStore = connectRedis(session)
   const redisClient = new Redis()
-  app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
+  app.use(cors({ credentials: true, origin: '*' }))
   app.use(
     session({
       name: 'qid',

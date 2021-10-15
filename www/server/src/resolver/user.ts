@@ -16,7 +16,6 @@ export default class UserResolver {
     @Arg('options') options: UserCredInput,
     @Ctx() { orm, req }: MyContext
   ): Promise<UserResponse> {
-    console.log(options.email)
     if (!options.email.includes('@')) {
       return {
         errors: [{ field: 'email', message: 'Wrong email format' }],
@@ -148,10 +147,60 @@ export default class UserResolver {
     }
     const exporationTime = 60 * 60 * 24
     const token = v4()
-    await redis.set(token, user.id, 'ex', exporationTime) // 24h expiration
+    await redis.set(
+      process.env.UID_SECRET + token,
+      user.id,
+      'ex',
+      exporationTime
+    ) // 24h expiration
     const url = `<a href="http://localhost:3000/reset-password/${token}">Click here to restart your password</a> `
     await sendMail(user.email, url)
 
     return true
+  }
+
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg('token') token: string,
+    @Arg('newPassword') newPassword: string,
+    @Ctx()
+    { redis, orm }: MyContext
+  ): Promise<UserResponse> {
+    if (newPassword.length < 3) {
+      return {
+        errors: [
+          {
+            field: 'newPassword',
+            message: 'Password needs to be at least 3 characters long',
+          },
+        ],
+      }
+    }
+    const REDIS_TOKEN = process.env.UID_SECRET + token
+    const UserId = await redis.get(REDIS_TOKEN)
+
+    if (!UserId) {
+      return {
+        errors: [
+          {
+            field: 'token',
+            message: 'Token expired ask for new one ',
+          },
+        ],
+      }
+    }
+    const hashedPassword = await argon2.hash(newPassword)
+    const user = await orm.manager.findOne(User, { id: parseInt(UserId, 10) })
+
+    if (!user) {
+      return {
+        errors: [{ field: 'token', message: 'user no longer exist' }],
+      }
+    }
+    user.password = hashedPassword
+    user.save()
+    redis.del(REDIS_TOKEN)
+
+    return { user }
   }
 }

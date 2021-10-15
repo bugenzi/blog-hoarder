@@ -52,7 +52,6 @@ const createUrqlClient = (ssrExchange: any) => ({
                 if (res.register.errors) {
                   return query
                 }
-                console.log('CACHE GENERATOR', res.register.user)
                 return { me: res.register.user }
               }
             ),

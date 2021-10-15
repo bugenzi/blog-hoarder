@@ -3,13 +3,16 @@ import React from 'react'
 import { AppBar, Box, Typography, Button, Avatar } from '@mui/material'
 import Link from 'next/link'
 import CircularProgress from '@mui/material/CircularProgress'
+import { withUrqlClient } from 'next-urql'
 import { NavLinks, NavSection } from '../assets/style/Navbar'
 import { useMeQuery, useLogoutMutation } from '../generated/graphql'
+import createUrqlClient from '../utils/createUrqlClient'
 
 // import {} from "@mui/material/styles"
-const NavBar: React.FC = () => {
+const NavBar: React.FC = ({}) => {
   const [{ data, fetching }] = useMeQuery()
   const [, logout] = useLogoutMutation()
+
   let body
   if (fetching) {
     body = <CircularProgress />
@@ -53,5 +56,4 @@ const NavBar: React.FC = () => {
     </AppBar>
   )
 }
-
-export default NavBar
+export default withUrqlClient(createUrqlClient, { ssr: false })(NavBar)
