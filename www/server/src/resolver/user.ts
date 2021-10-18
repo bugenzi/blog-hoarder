@@ -78,7 +78,11 @@ export default class UserResolver {
       .createQueryBuilder('user')
       .where(queryObject.name, { ...queryObject.value })
       .getOne()
-
+    if (!user) {
+      return {
+        errors: [{ field: 'usernameOrEmail', message: 'Wrong credintials ' }],
+      }
+    }
     const isValid = await argon2.verify(user.password, password)
     if (!isValid) {
       return {
@@ -109,17 +113,14 @@ export default class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { orm, req }: MyContext) {
+  me(@Ctx() { orm, req }: MyContext) {
     // const users = await em.find(User, {})
-    const user = await orm.manager.findOne(User, { id: req.session.userId })
-    if (!user) {
-      return {
-        errors: [
-          { field: 'username', message: 'No user something went wrong' },
-        ],
-      }
+    if (!req.session.userId) {
+      return null
     }
-    return user
+    return orm.manager.findOne(User, {
+      id: req.session.userId,
+    })
   }
 
   @Mutation(() => Boolean)

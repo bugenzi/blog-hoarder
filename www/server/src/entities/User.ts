@@ -27,7 +27,9 @@ export default class User extends BaseEntity {
   @Column({ unique: true })
   password!: string
 
-  @OneToMany(() => Blog, (blog) => blog.author)
+  @OneToMany(() => Blog, (blog) => blog.author, {
+    cascade: ['insert', 'update'],
+  })
   blogs: Blog[]
 
   @Field(() => String)

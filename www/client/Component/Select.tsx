@@ -28,11 +28,11 @@ export default function CustomSelect({
   options,
 }: Props): ReactElement {
   const handleChange = (val: any) => {
-    onChange('BlogType', val)
+    onChange('blogType', val)
   }
 
   const handleBlur = () => {
-    onBlur('BlogType', true)
+    onBlur('blogType', true)
   }
   return (
     <Stack mb={5} spacing={2}>

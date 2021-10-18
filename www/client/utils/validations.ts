@@ -9,7 +9,7 @@ export const loginValdiation = yup.object({
 })
 
 export const registerValidation = yup.object({
-  email: yup.string().required().email(),
+  email: yup.string().required().email().required('Email is required'),
   username: yup.string().required('Username is required').min(3).max(10),
   password: yup
     .string()

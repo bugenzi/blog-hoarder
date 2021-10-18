@@ -10,10 +10,15 @@ import { useCreateBlogsMutation } from '../generated/graphql'
 import createUrqlClient from '../utils/createUrqlClient'
 import Select from '../Component/Select'
 import mapBlogType from '../utils/mapBlogType'
+import toMapError from '../utils/mapErrors'
+import isAuth from '../utils/isAuth'
+import Layout from '../Component/Layout'
 
 const CreatePost: React.FC = () => {
+  isAuth()
   const [, createBlog] = useCreateBlogsMutation()
   const router = useRouter()
+
   const options = [
     { value: 'Development', label: 'Development' },
     { value: 'Health and life tips', label: 'Health and life tips' },
@@ -23,7 +28,7 @@ const CreatePost: React.FC = () => {
     { value: 'Food', label: 'Food' },
   ]
   return (
-    <Wrapper
+    <Layout
       csx={{
         width: '100%',
         mt: { xl: '5rem' },
@@ -65,25 +70,28 @@ const CreatePost: React.FC = () => {
             link: '',
             title: '',
             text: '',
-            BlogType: [],
+            blogType: [],
           }}
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async (values, { setSubmitting, setErrors }) => {
             // still in development
-            const mappedBlogs = mapBlogType(values.BlogType)
+            const mappedBlogs = mapBlogType(values.blogType)
 
             await createBlog({
-              options: {
+              input: {
                 title: values.title,
                 link: values.link,
-                BlogType: mappedBlogs,
+                blogType: mappedBlogs,
                 text: values.text,
               },
             }).then((res) => {
-              if (res.data?.postBlog.blog) {
+              if (res.data?.postBlog.errors) {
+                setErrors(toMapError(res.data?.postBlog.errors))
+              }
+              if (res.data?.postBlog.blog?.id) {
                 router.push('/')
               }
-              console.log(res)
             })
+
             // you have to clean up
             setSubmitting(false)
           }}
@@ -99,29 +107,29 @@ const CreatePost: React.FC = () => {
             <Form>
               <InputField
                 name="link"
-                label="link"
+                label="Link"
                 type="text"
                 errorMessage={errors.link}
               />
               <InputField
                 name="title"
                 type="title"
-                label="title"
+                label="Title"
                 errorMessage={errors.title}
               />
               <InputField
                 isMultiline
                 name="text"
                 type="text"
-                label="text"
+                label="Write short introduction about the blog "
                 errorMessage={errors.text}
               />
               <Select
-                value={values.BlogType}
+                value={values.blogType}
                 onChange={setFieldValue}
                 onBlur={setFieldTouched}
-                error={errors.BlogType}
-                touched={touched.BlogType}
+                error={errors.blogType}
+                touched={touched.blogType}
                 options={options}
               />
               <Stack spacing={2}>
@@ -139,8 +147,8 @@ const CreatePost: React.FC = () => {
           )}
         </Formik>
       </Box>
-    </Wrapper>
+    </Layout>
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(CreatePost)
+export default withUrqlClient(createUrqlClient, { ssr: false })(CreatePost)

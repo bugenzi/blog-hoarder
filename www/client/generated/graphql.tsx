@@ -16,18 +16,19 @@ export type Scalars = {
 
 export type Blog = {
   __typename?: 'Blog';
-  author: Scalars['String'];
+  authorId: Scalars['Float'];
   blogType: Array<Scalars['String']>;
   createdAt: Scalars['String'];
   id: Scalars['Float'];
   link: Scalars['String'];
+  points: Scalars['String'];
   text: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
 
 export type BlogInput = {
-  BlogType: Array<Scalars['String']>;
+  blogType: Array<Scalars['String']>;
   link: Scalars['String'];
   text: Scalars['String'];
   title: Scalars['String'];
@@ -75,7 +76,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationPostBlogArgs = {
-  options: BlogInput;
+  input: BlogInput;
 };
 
 
@@ -127,11 +128,11 @@ export type ChangePasswordMutationVariables = Exact<{
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', id: number, username: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type CreateBlogsMutationVariables = Exact<{
-  options: BlogInput;
+  input: BlogInput;
 }>;
 
 
-export type CreateBlogsMutation = { __typename?: 'Mutation', postBlog: { __typename?: 'BlogResponse', blog?: Maybe<{ __typename?: 'Blog', link: string, text: string, id: number, createdAt: string, author: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type CreateBlogsMutation = { __typename?: 'Mutation', postBlog: { __typename?: 'BlogResponse', blog?: Maybe<{ __typename?: 'Blog', link: string, title: string, text: string, id: number, createdAt: string, authorId: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -163,7 +164,7 @@ export type RegisterMutation = { __typename?: 'Mutation', register: { __typename
 export type GetBlogQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBlogQuery = { __typename?: 'Query', getBlogs: { __typename?: 'BlogResponse', blogs?: Maybe<Array<{ __typename?: 'Blog', id: number, author: string, title: string, text: string, blogType: Array<string>, link: string }>> } };
+export type GetBlogQuery = { __typename?: 'Query', getBlogs: { __typename?: 'BlogResponse', blogs?: Maybe<Array<{ __typename?: 'Blog', id: number, title: string, text: string, link: string, blogType: Array<string> }>> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -205,14 +206,15 @@ export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
 };
 export const CreateBlogsDocument = gql`
-    mutation CreateBlogs($options: BlogInput!) {
-  postBlog(options: $options) {
+    mutation CreateBlogs($input: BlogInput!) {
+  postBlog(input: $input) {
     blog {
       link
+      title
       text
       id
       createdAt
-      author
+      authorId
     }
     errors {
       field
@@ -282,11 +284,10 @@ export const GetBlogDocument = gql`
   getBlogs {
     blogs {
       id
-      author
       title
       text
-      blogType
       link
+      blogType
     }
   }
 }

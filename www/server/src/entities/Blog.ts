@@ -9,7 +9,7 @@ import {
 } from 'typeorm'
 import { ObjectType, Field } from 'type-graphql'
 import User from './User'
-
+// uniqe true will be set to link,text for plagerism reasons
 @ObjectType()
 @Entity()
 export default class Blog extends BaseEntity {
@@ -18,26 +18,32 @@ export default class Blog extends BaseEntity {
   id!: number
 
   @Field()
-  @Column({ unique: true })
+  @Column()
   title!: string
 
   @Field()
-  @Column({ unique: true })
+  @Column()
   text!: string
 
   @Field()
-  @Column({ unique: true })
+  @Column()
   link!: string
+
+  @Field()
+  @Column({ type: 'int', default: 0 })
+  points!: string
 
   @Field(() => [String])
   @Column('text', { array: true })
   blogType: string[]
 
+  @Field()
   @Column()
   authorId: number
 
-  @Field(() => String)
-  @ManyToOne(() => User, (user) => user.blogs)
+  @ManyToOne(() => User, (user) => user.blogs, {
+    cascade: ['insert', 'update'],
+  })
   author: User
 
   @Field(() => String)

@@ -1,11 +1,12 @@
-mutation CreateBlogs($options: BlogInput!) {
-  postBlog(options: $options) {
+mutation CreateBlogs($input: BlogInput!) {
+  postBlog(input: $input) {
     blog {
       link
+      title
       text
       id
       createdAt
-      author
+      authorId
     }
     errors {
       field

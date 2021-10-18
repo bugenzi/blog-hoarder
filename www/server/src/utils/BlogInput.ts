@@ -12,5 +12,5 @@ export default class BlogInput {
   text: string
 
   @Field(() => [String])
-  BlogType: string[]
+  blogType: string[]
 }

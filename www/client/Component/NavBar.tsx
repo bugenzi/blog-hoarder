@@ -1,16 +1,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react'
-import { AppBar, Box, Typography, Button, Avatar } from '@mui/material'
-import Link from 'next/link'
+import { AppBar, Avatar, Box, Button, Typography } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import { withUrqlClient } from 'next-urql'
+import Link from 'next/link'
+import React from 'react'
 import { NavLinks, NavSection } from '../assets/style/Navbar'
-import { useMeQuery, useLogoutMutation } from '../generated/graphql'
+import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import createUrqlClient from '../utils/createUrqlClient'
+import isServer from '../utils/isServer'
 
 // import {} from "@mui/material/styles"
-const NavBar: React.FC = ({}) => {
-  const [{ data, fetching }] = useMeQuery()
+const NavBar: React.FC = () => {
+  const [{ data, fetching }] = useMeQuery({ pause: isServer() })
   const [, logout] = useLogoutMutation()
 
   let body
@@ -56,4 +57,4 @@ const NavBar: React.FC = ({}) => {
     </AppBar>
   )
 }
-export default withUrqlClient(createUrqlClient, { ssr: false })(NavBar)
+export default withUrqlClient(createUrqlClient, { ssr: true })(NavBar)

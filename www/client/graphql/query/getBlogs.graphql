@@ -2,11 +2,10 @@ query GetBlog {
   getBlogs {
     blogs {
       id
-      author
       title
       text
-      blogType
       link
+      blogType
     }
   }
 }

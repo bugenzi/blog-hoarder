@@ -76,7 +76,7 @@ function Login() {
             <Form>
               <InputField
                 name="usernameOrEmail"
-                label="usernameOrEmail"
+                label="Username or email"
                 errorMessage={errors.usernameOrEmail}
               />
               <InputField
