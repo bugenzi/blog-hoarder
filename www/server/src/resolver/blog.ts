@@ -8,6 +8,7 @@ import {
   Arg,
   Query,
   UseMiddleware,
+  Int,
 } from 'type-graphql'
 import { MyContext } from '../../types'
 import Blog from '../entities/Blog'
@@ -59,7 +60,7 @@ export default class BlogResolver {
         ],
       }
     }
-    console.log(input.blogType.length)
+
     if (input.blogType.length <= 0) {
       return {
         errors: [
@@ -77,6 +78,7 @@ export default class BlogResolver {
         .insert()
         .into(Blog)
         .values({
+          id: 90,
           ...input,
           authorId: req.session.userId,
         })
@@ -91,9 +93,23 @@ export default class BlogResolver {
   }
 
   @Query(() => BlogResponse)
-  async getBlogs(@Ctx() { orm }: MyContext): Promise<BlogResponse> {
-    const blogs = await orm.manager.find(Blog, {})
-
+  async getBlogs(
+    @Arg('limit', () => Int) limit: number,
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
+    @Ctx() { orm }: MyContext
+  ): Promise<BlogResponse> {
+    const fetchLimit = Math.max(20, limit)
+    const result = await orm
+      .getRepository(Blog)
+      .createQueryBuilder('posts')
+      .orderBy('"createdAt"', 'DESC')
+      .take(fetchLimit)
+    if (cursor) {
+      result.where('"createdAt" < :cursor', {
+        cursor: new Date(parseInt(cursor, 10)),
+      })
+    }
+    const blogs = await result.getMany()
     return { blogs }
   }
 }

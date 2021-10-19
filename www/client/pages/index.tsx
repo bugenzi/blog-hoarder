@@ -1,4 +1,3 @@
-// import { useRouter } from 'next/router'
 import {
   Button,
   Card,
@@ -17,7 +16,7 @@ import { useGetBlogQuery } from '../generated/graphql'
 import createUrqlClient from '../utils/createUrqlClient'
 
 const HomePage: React.FC = () => {
-  const [{ data }] = useGetBlogQuery()
+  const [{ data }] = useGetBlogQuery({ variables: { limit: 20 } })
 
   return (
     <Layout>
@@ -27,9 +26,12 @@ const HomePage: React.FC = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            m: '10% 0 ',
           }}
         >
-          <h1>Hello, world!</h1>
+          <Typography variant="h3" component="h3">
+            Blog-hoarder
+          </Typography>
           <Link
             sx={{ textDecoration: 'none' }}
             bgcolor="primary.main"
@@ -50,7 +52,7 @@ const HomePage: React.FC = () => {
                   <CardMedia
                     component="img"
                     height="140"
-                    image={blog.link}
+                    image={blog.imageUrl ? blog.imageUrl : blog.link}
                     alt="green iguana"
                   />
                   <CardContent>

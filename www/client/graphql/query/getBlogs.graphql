@@ -1,11 +1,12 @@
-query GetBlog {
-  getBlogs {
+query GetBlog($limit: Int!) {
+  getBlogs(limit: $limit) {
     blogs {
       id
       title
       text
       link
       blogType
+      imageUrl
     }
   }
 }

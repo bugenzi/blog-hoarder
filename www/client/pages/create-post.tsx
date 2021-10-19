@@ -5,14 +5,14 @@ import { withUrqlClient } from 'next-urql'
 import React from 'react'
 import { useRouter } from 'next/router'
 import InputField from '../Component/InputField'
-import Wrapper from '../Component/Wrapper'
 import { useCreateBlogsMutation } from '../generated/graphql'
 import createUrqlClient from '../utils/createUrqlClient'
 import Select from '../Component/Select'
 import mapBlogType from '../utils/mapBlogType'
 import toMapError from '../utils/mapErrors'
-import isAuth from '../utils/isAuth'
+
 import Layout from '../Component/Layout'
+import isAuth from '../utils/isAuth'
 
 const CreatePost: React.FC = () => {
   isAuth()
@@ -71,6 +71,7 @@ const CreatePost: React.FC = () => {
             title: '',
             text: '',
             blogType: [],
+            imageUrl: '',
           }}
           onSubmit={async (values, { setSubmitting, setErrors }) => {
             // still in development
@@ -82,8 +83,10 @@ const CreatePost: React.FC = () => {
                 link: values.link,
                 blogType: mappedBlogs,
                 text: values.text,
+                imageUrl: values.imageUrl,
               },
             }).then((res) => {
+              console.log(res)
               if (res.data?.postBlog.errors) {
                 setErrors(toMapError(res.data?.postBlog.errors))
               }
@@ -132,6 +135,16 @@ const CreatePost: React.FC = () => {
                 touched={touched.blogType}
                 options={options}
               />
+              <Typography mt={10} color="primary">
+                This part is optional but is perferd
+              </Typography>
+              <InputField
+                csx={{ zIndex: 0 }}
+                name="imageUrl"
+                type="imageUrl"
+                label="Url of a image you would like to see "
+                errorMessage={errors.text}
+              />
               <Stack spacing={2}>
                 {isSubmitting ? (
                   <Button disabled type="submit">
@@ -151,4 +164,4 @@ const CreatePost: React.FC = () => {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(CreatePost)
+export default withUrqlClient(createUrqlClient)(CreatePost)

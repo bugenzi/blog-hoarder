@@ -65,7 +65,11 @@ function Login() {
               if (res.data?.login.errors) {
                 setErrors(toMapError(res.data.login.errors))
               } else if (res.data?.login.user) {
-                router.push('/')
+                if (typeof router.query.next === 'string') {
+                  router.push(router.query.next)
+                } else {
+                  router.push('/')
+                }
               }
             })
             // you have to clean up
@@ -111,4 +115,4 @@ function Login() {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Login)
+export default withUrqlClient(createUrqlClient)(Login)

@@ -20,6 +20,7 @@ export type Blog = {
   blogType: Array<Scalars['String']>;
   createdAt: Scalars['String'];
   id: Scalars['Float'];
+  imageUrl?: Maybe<Scalars['String']>;
   link: Scalars['String'];
   points: Scalars['String'];
   text: Scalars['String'];
@@ -29,6 +30,7 @@ export type Blog = {
 
 export type BlogInput = {
   blogType: Array<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
   link: Scalars['String'];
   text: Scalars['String'];
   title: Scalars['String'];
@@ -90,6 +92,12 @@ export type Query = {
   getUsers: UserResponse;
   me?: Maybe<User>;
   test: Scalars['String'];
+};
+
+
+export type QueryGetBlogsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
 };
 
 export type User = {
@@ -161,10 +169,12 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: Maybe<{ __typename?: 'User', id: number, username: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
-export type GetBlogQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetBlogQueryVariables = Exact<{
+  limit: Scalars['Int'];
+}>;
 
 
-export type GetBlogQuery = { __typename?: 'Query', getBlogs: { __typename?: 'BlogResponse', blogs?: Maybe<Array<{ __typename?: 'Blog', id: number, title: string, text: string, link: string, blogType: Array<string> }>> } };
+export type GetBlogQuery = { __typename?: 'Query', getBlogs: { __typename?: 'BlogResponse', blogs?: Maybe<Array<{ __typename?: 'Blog', id: number, title: string, text: string, link: string, blogType: Array<string>, imageUrl?: Maybe<string> }>> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -280,14 +290,15 @@ export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
 export const GetBlogDocument = gql`
-    query GetBlog {
-  getBlogs {
+    query GetBlog($limit: Int!) {
+  getBlogs(limit: $limit) {
     blogs {
       id
       title
       text
       link
       blogType
+      imageUrl
     }
   }
 }

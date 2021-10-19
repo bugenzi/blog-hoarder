@@ -29,6 +29,10 @@ export default class Blog extends BaseEntity {
   @Column()
   link!: string
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  imageUrl?: string
+
   @Field()
   @Column({ type: 'int', default: 0 })
   points!: string

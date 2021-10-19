@@ -11,6 +11,9 @@ export default class BlogInput {
   @Field()
   text: string
 
+  @Field({ nullable: true })
+  imageUrl?: string
+
   @Field(() => [String])
   blogType: string[]
 }
