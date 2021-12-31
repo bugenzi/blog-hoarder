@@ -31,7 +31,7 @@ const CreatePost: React.FC = () => {
     <Layout
       csx={{
         width: '100%',
-        mt: { xl: '5rem' },
+        mt: { xl: '10rem', xs: '4rem' },
       }}
     >
       <Box
@@ -86,7 +86,6 @@ const CreatePost: React.FC = () => {
                 imageUrl: values.imageUrl,
               },
             }).then((res) => {
-              console.log(res)
               if (res.data?.postBlog.errors) {
                 setErrors(toMapError(res.data?.postBlog.errors))
               }

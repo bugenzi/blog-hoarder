@@ -16,7 +16,7 @@ import { __prod__ } from './constants'
 import User from './src/entities/User'
 import Blog from './src/entities/Blog'
 import BlogResolver from './src/resolver/blog'
-// dotenv.config()
+
 const intializeServer = async () => {
   dotenv.config()
   const PORT = process.env.PORT || '4000'
@@ -35,7 +35,7 @@ const intializeServer = async () => {
   const maxAge = 1000 * 60 * 60 * 24 * 365 * 10
   const RedisStore = connectRedis(session)
   const redisClient = new Redis()
-  app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
+  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
   app.use(
     session({
       name: 'qid',

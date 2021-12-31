@@ -60,7 +60,7 @@ const ChangePassword: NextPage = () => {
             </Typography>
             <InputField
               name="newPassword"
-              label="newPassword"
+              label="New password"
               errorMessage={errors.newPassword}
               type="password"
             />

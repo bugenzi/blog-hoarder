@@ -35,7 +35,7 @@ export default class Blog extends BaseEntity {
 
   @Field()
   @Column({ type: 'int', default: 0 })
-  points!: string
+  points!: number
 
   @Field(() => [String])
   @Column('text', { array: true })
@@ -45,6 +45,7 @@ export default class Blog extends BaseEntity {
   @Column()
   authorId: number
 
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.blogs, {
     cascade: ['insert', 'update'],
   })

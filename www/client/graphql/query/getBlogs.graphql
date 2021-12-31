@@ -1,5 +1,5 @@
-query GetBlog($limit: Int!) {
-  getBlogs(limit: $limit) {
+query GetBlogs($limit: Int!, $cursor: String) {
+  getBlogs(limit: $limit, cursor: $cursor) {
     blogs {
       id
       title
@@ -7,6 +7,12 @@ query GetBlog($limit: Int!) {
       link
       blogType
       imageUrl
+      points
+      createdAt
+      author {
+        id
+        username
+      }
     }
   }
 }

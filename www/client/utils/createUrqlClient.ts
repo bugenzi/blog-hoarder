@@ -1,6 +1,6 @@
 import { cacheExchange } from '@urql/exchange-graphcache'
 import Router from 'next/router'
-import { dedupExchange, Exchange, fetchExchange } from 'urql'
+import { dedupExchange, Exchange, fetchExchange } from 'urql/core'
 import { pipe, tap } from 'wonka'
 import {
   LoginMutation,
@@ -10,6 +10,7 @@ import {
   RegisterMutation,
 } from '../generated/graphql'
 import cacheUpdateQuery from './cacheUpdateHelper'
+import customUrlqPagination from './customUrlqPagination'
 
 const errorExchange: Exchange =
   ({ forward }) =>
@@ -32,6 +33,14 @@ const createUrqlClient = (ssrExchange: any) => ({
   exchanges: [
     dedupExchange,
     cacheExchange({
+      keys: {
+        PaginationResponse: () => null,
+      },
+      resolvers: {
+        Query: {
+          getBlogs: customUrlqPagination(),
+        },
+      },
       updates: {
         Mutation: {
           // eslint-disable-next-line no-unused-vars

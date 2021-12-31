@@ -15,6 +15,7 @@ import Blog from '../entities/Blog'
 import BlogInput from '../utils/BlogInput'
 import BlogResponse from '../utils/BlogResponse'
 import isAuth from '../utils/isAuth'
+import PaginationResponse from '../utils/PaginatedBlogs'
 
 @Resolver()
 export default class BlogResolver {
@@ -92,24 +93,42 @@ export default class BlogResolver {
     return { blog }
   }
 
-  @Query(() => BlogResponse)
+  @Query(() => PaginationResponse)
   async getBlogs(
     @Arg('limit', () => Int) limit: number,
     @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
     @Ctx() { orm }: MyContext
-  ): Promise<BlogResponse> {
-    const fetchLimit = Math.max(20, limit)
-    const result = await orm
-      .getRepository(Blog)
-      .createQueryBuilder('posts')
-      .orderBy('"createdAt"', 'DESC')
-      .take(fetchLimit)
+  ): Promise<PaginationResponse> {
+    const fetchLimit = Math.min(20, limit)
+    const fetchLimitPlus = fetchLimit + 1
+    const replacements: any[] = [fetchLimitPlus]
     if (cursor) {
-      result.where('"createdAt" < :cursor', {
-        cursor: new Date(parseInt(cursor, 10)),
-      })
+      replacements.push(new Date(parseInt(cursor, 10)))
     }
-    const blogs = await result.getMany()
-    return { blogs }
+
+    const blogs = await orm.query(
+      `
+    select b.* ,
+    json_build_object (
+      'id',u.id,
+      'username',u.username,
+      'createdAt', u."createdAt"
+      
+    )author
+    from blog b
+    inner join public.user u on u.id=b."authorId"
+    ${cursor ? 'where b."createdAt"<$2' : ''}
+    order by b."createdAt" DESC
+    limit $1
+    `,
+      replacements
+    )
+    console.log(replacements)
+    return { blogs, hasMore: blogs.length === fetchLimitPlus }
+    // TODO : BUILD better and custom sql query for geting blogs
+
+    // const blogs = await orm.query()
+    // const blogs = await result.getMany()
+    // return { blogs }
   }
 }
